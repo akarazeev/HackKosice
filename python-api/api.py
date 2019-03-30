@@ -29,6 +29,17 @@ class SymptomAPI:
 
         return r.json()
 
+    def get_specialisations(self, symptoms, gender, year_of_birth):
+        data = {"language": self.lang, "format": "json",
+                "symptoms": json.dumps(symptoms), "gender": gender,
+                "year_of_birth": str(year_of_birth)}
+
+        r = requests.get(self.url + "diagnosis/specialisations", 
+                         headers=self.headers, 
+                         params=data)
+
+        return r.json()
+
 
     def set_language(self, new_lang):
         valid = ["de-ch", "en-gb", "fr-fr", "es-es", "tr-tr"]
