@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Healthcare system</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
+    <script type="text/javascript" src="js/symptom_api.js"></script>
+</head>
+<body onload="setup();">
+
+<div class="container">
+    <div class="page-header">
+        <h1>Healthcare system  <small>take care of yourself</small></h1>
+    </div>
+
+
+    <div class="container" id="zero-page">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="container">
+                        <div style="text-align: center; font-size: 18pt;"> Were you here before?</div>
+                        </br>
+                        <div style="font-size: 14pt;"> If so, please scan your QR code.</div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="person_id" autofocus>
+                        </div>
+                        <br>
+                        <br>
+
+                        <button class="submit-button" 
+                                id="init-button"
+                                style = "margin-bottom: 20px; "
+                                onclick="get_diagnosis();"> If not, click this button </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container" id="first-page" style="display: none;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Personal Info</div>
+                <div class="panel-body">
+                    Name:
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                    Surname
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="surname">
+                    </div>
+                    Gender:
+                    <br />
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default" id="gender_male">
+                            <input type="radio" autocomplete="off" /> Male
+                        </label>
+                        <label class="btn btn-default" id="gender_female">
+                            <input type="radio" autocomplete="off" /> Female
+                        </label>
+                    </div>
+                    <br />
+                    <br />
+                    Year of birth:
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="dateofbirth">
+                    </div>
+                    Phone number
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phone">
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Where does it hurt?</div>
+                <div class="panel-body">
+                    <div class="container" id="symptoms-list">
+                        Please wait, loading...
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit">
+                <button class="submit-button" 
+                        id="submit-button" 
+                        style="display: none;" 
+                        onclick="get_diagnosis();"> Submit </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="second-page" style="display: none;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Possible diagnosis</div>
+                <div class="panel-body">
+                    <div id="diagnosis-result" class="diagnosis"></div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Available doctors</div>
+                <div class="panel-body">
+                    <div class="container" id="doctors-list">
+                        Please wait, loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="third-page" style="display: none;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Success</div>
+                <div class="panel-body">
+                    <div style="font-size: 14pt;" id="final-message"> </div>
+
+                    <div style="width: 100%; display: flex; justify-content: center; margin-top: 50px; margin-bottom: 50px;">
+                        <div id="qrcode" style="align-self: center;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- you need to include the shieldui css and js assets in order for the components to work -->
+    <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+
+    <style>
+        .slider {
+            width: 100%;
+        }
+    </style>
+
+</div>
+
+</body>
+</html>
