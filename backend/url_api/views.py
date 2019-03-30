@@ -8,6 +8,14 @@ from rest_framework.response import Response
 from python_api import api
 # Create your views here.
 
+class SpecialisationView(APIView):
+    symptom_API = api.SymptomAPI()
+    def post(self, request):
+        symptoms = request.data.get('symptoms')
+        gender = request.data.get('gender')
+        year_of_birth = request.data.get('year_of_birth')
+        specialisation = self.symptom_API.get_diagnosis(symptoms, gender, year_of_birth)
+        return Response(specialisation)
 
 class SymptomView(APIView):
     symptom_API = api.SymptomAPI()
