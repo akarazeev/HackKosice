@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'url_api',
     'rest_framework',
+    'equeue',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hackkosice',
+        'USER': 'root',
+        'PASSWORD': 'default',
     }
 }
 
