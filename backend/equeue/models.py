@@ -6,6 +6,7 @@ class Patient(models.Model):
     name = models.CharField(max_length = 255)
     gender = models.CharField(max_length = 31)
     year_of_birth = models.IntegerField()
+    phone = models.CharField(max_length = 15, null = True)
 
 class Doctor(models.Model):
     name = models.CharField(max_length = 255)
@@ -17,6 +18,7 @@ class Doctor(models.Model):
 class PatientDoctorRelation(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True, null=True)
     time = models.TimeField(auto_now_add=True)
     finished = models.BooleanField(default=False)
     symptoms = models.CharField(max_length = 255)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Doctor, Patient
+from .models import Doctor, Patient, PatientDoctorRelation
 from django.conf import settings
 
 class DoctorSerializer(serializers.ModelSerializer):
@@ -10,4 +10,11 @@ class DoctorSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ('id', 'name', 'gender', 'year_of_birth')
+        fields = ('id', 'name', 'gender', 'year_of_birth', 'phone')
+
+class ApplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientDoctorRelation
+        fields = ('date', 'time', 'symptoms', 'diagnosis')
+
+# class ApplySerializer(serializers.Serializer):

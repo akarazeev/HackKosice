@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import DoctorSerializer, PatientSerializer
+from .serializers import DoctorSerializer, PatientSerializer, ApplySerializer
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -62,12 +62,26 @@ class PatientViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
+        if 'phone' not in data:
+            phone = ''
+        else:
+            phone = data['phone']
         patient = Patient(name = data['name'], gender = data['gender'],
-                          year_of_birth = data['year_of_birth'])
+                          year_of_birth = data['year_of_birth'], phone = phone)
         patient.save()
         return Response({"id" : patient.id, "name" : patient.name, "gender" :
-                         patient.gender, "year_of_birth" : patient.year_of_birth})
+                         patient.gender, "year_of_birth" : patient.year_of_birth, "phone" : patient.phone})
 
+class PatientView(APIView):
+    def get(self, request):
+        patient_id = self.request.query_params.get('id')
+        patient = Patient.objects.all().get(id = patient_id)
+        applies = PatientDoctorRelation.objects.all().filter(patient = patient)
+        print(applies)
+        serializer = ApplySerializer(applies, many = True)
+        return Response({"id" : patient.id, "name" : patient.name, "gender" :
+                         patient.gender, "year_of_birth" : patient.year_of_birth,
+                         "applies":serializer.data})
 
 class ApplyView(APIView):
     def post(self, request):
@@ -77,17 +91,23 @@ class ApplyView(APIView):
         doctor = Doctor.objects.all().get(id = doctor_id)
         symptoms = request.data.get('symptoms')
         diagnosis = request.data.get('diagnosis')
-        apply = PatientDoctorRelation(patient = patient, doctor = doctor, symptoms = symptoms, \
-                                      diagnosis = diagnosis)
-        apply.save()
-        return Response({"status":"added"})
+        already_in_queue = PatientDoctorRelation.objects.all().filter(patient = patient)
+        if not already_in_queue:
+            apply = PatientDoctorRelation(patient = patient, doctor = doctor, symptoms = symptoms, \
+                                          diagnosis = diagnosis)
+            apply.save()
+            return Response({"status":"added"})
+        return Response({"status":"already in"})
     def get(self, request):
         patient_id = self.request.query_params.get('patient_id')
         applies = PatientDoctorRelation.objects.all()
-        applicant = applies.get(patient__id = patient_id)
-        if applies:
+        try:
+            applicant = applies.get(patient__id = patient_id)
+        except:
+            return Response({"queue":-1, "status":"error"})
+        if applicant:
             # applies.exclude(id = applicant.id)
             for app in applies:
-                if app.time > applicant.time or app.finished == True:
+                if app.time > applicant.time or app.finished == True or app.doctor != applicant.doctor:
                     applies = applies.exclude(id = app.id)
             return Response({"queue":len(applies)})
