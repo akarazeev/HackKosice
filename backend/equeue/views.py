@@ -27,7 +27,7 @@ class DoctorViewSet(viewsets.ModelViewSet):
                 queryset = Doctor.objects.all()
                 for obj in queryset:
                     if obj.specialisation.find(self.request.query_params.get('specialisation')) == -1:
-                        print(queryset)
+                        # print(queryset)
                         queryset = queryset.exclude(id = obj.id)
                 return queryset
             return Doctor.objects.all()
@@ -77,7 +77,7 @@ class PatientView(APIView):
         patient_id = self.request.query_params.get('id')
         patient = Patient.objects.all().get(id = patient_id)
         applies = PatientDoctorRelation.objects.all().filter(patient = patient)
-        print(applies)
+        # print(applies)
         serializer = ApplySerializer(applies, many = True)
         return Response({"id" : patient.id, "name" : patient.name, "gender" :
                          patient.gender, "year_of_birth" : patient.year_of_birth,
@@ -91,7 +91,7 @@ class ApplyView(APIView):
         doctor = Doctor.objects.all().get(id = doctor_id)
         symptoms = request.data.get('symptoms')
         diagnosis = request.data.get('diagnosis')
-        already_in_queue = PatientDoctorRelation.objects.all().filter(patient = patient)
+        already_in_queue = PatientDoctorRelation.objects.all().filter(patient = patient, finished = False)
         if not already_in_queue:
             apply = PatientDoctorRelation(patient = patient, doctor = doctor, symptoms = symptoms, \
                                           diagnosis = diagnosis)
@@ -102,7 +102,8 @@ class ApplyView(APIView):
         patient_id = self.request.query_params.get('patient_id')
         applies = PatientDoctorRelation.objects.all()
         try:
-            applicant = applies.get(patient__id = patient_id)
+            applicant = applies.get(patient__id = patient_id, finished = False)
+            # print(applicant)
         except:
             return Response({"queue":-1, "status":"error"})
         if applicant:
@@ -111,3 +112,12 @@ class ApplyView(APIView):
                 if app.time > applicant.time or app.finished == True or app.doctor != applicant.doctor:
                     applies = applies.exclude(id = app.id)
             return Response({"queue":len(applies)})
+
+    def patch(self, request):
+        patient_id = request.data.get('patient_id')
+        patient = Patient.objects.all().get(id = patient_id)
+        personal_queue = PatientDoctorRelation.objects.all().filter(patient = patient)
+        for obj in personal_queue:
+            obj.finished = True
+            obj.save()
+        return Response({"status":"deleted"})
