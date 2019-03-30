@@ -14,7 +14,7 @@ class SpecialisationView(APIView):
         symptoms = request.data.get('symptoms')
         gender = request.data.get('gender')
         year_of_birth = request.data.get('year_of_birth')
-        specialisation = self.symptom_API.get_diagnosis(symptoms, gender, year_of_birth)
+        specialisation = self.symptom_API.get_specialisations(symptoms, gender, year_of_birth)
         return Response(specialisation)
 
 class SymptomView(APIView):
