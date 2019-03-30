@@ -9,6 +9,7 @@ class SymptomAPI:
 
     headers = {"X-RapidAPI-Key": key}
     
+    # Returns a JSON object with IDs and Names of all possible symptoms.
     def get_symptoms(self):
         data = {"language": self.lang, "format": "json"}
 
@@ -18,6 +19,8 @@ class SymptomAPI:
 
         return r.json()
 
+    # Accepts a list of symptoms, gender (str) and year of birth (str or int).
+    # Returns a JSON object with a possible diagnosis and it's probability.
     def get_diagnosis(self, symptoms, gender, year_of_birth):
         data = {"language": self.lang, "format": "json",
                 "symptoms": json.dumps(symptoms), "gender": gender,
@@ -29,6 +32,8 @@ class SymptomAPI:
 
         return r.json()
 
+    # Accepts a list of symptoms, gender (str) and year of birth (str or int).
+    # Returns a JSON with a specialisation corresponding to the diagnosis.
     def get_specialisations(self, symptoms, gender, year_of_birth):
         data = {"language": self.lang, "format": "json",
                 "symptoms": json.dumps(symptoms), "gender": gender,
@@ -41,7 +46,12 @@ class SymptomAPI:
         return r.json()
 
 
+    # Sets the new language for responses. Can be:
+    #     DE-CH, EN-GB, FR-FR, ES-ES, TR-TR,
+    # case-insensitive.
+    # Returns True if the language is valid, otherwise returns False.
     def set_language(self, new_lang):
+        new_lang = new_lang.lower()
         valid = ["de-ch", "en-gb", "fr-fr", "es-es", "tr-tr"]
         if new_lang in valid:
             self.lang = new_lang
@@ -49,5 +59,3 @@ class SymptomAPI:
         else:
             return False
 
-
-s = SymptomAPI()
