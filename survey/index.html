@@ -7,90 +7,87 @@
 
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
 
     <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/symptom_api.js"></script>
 </head>
-<body>
+<body onload="setup();">
 
 <div class="container">
-
-<div class="page-header">
-    <h1>Healthcare system  <small>take care of yourself</small></h1>
-</div>
-
-
-<div class="container">
-    <div class="col-md-2">
+    <div class="page-header">
+        <h1>Healthcare system  <small>take care of yourself</small></h1>
     </div>
-    <div class="col-md-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">Personal Info</div>
-            <div class="panel-body">
-                Name:
-                <div class="form-group">
-                    <input type="text" class="form-control" id="name">
-                </div>
-                Surname
-                <div class="form-group">
-                    <input type="password" class="form-control" id="surname">
-                </div>
-                Gender:
-                <br />
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" autocomplete="off" /> Male
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" autocomplete="off" /> Female
-                    </label>
-                </div>
-                <br />
-                <br />
-                Date of birth:
-                <div class="form-group">
-                    <input type="date" class="form-control" id="dateofbirth">
+
+
+    <div class="container">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Personal Info</div>
+                <div class="panel-body">
+                    Name:
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                    Surname
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="surname">
+                    </div>
+                    Gender:
+                    <br />
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default" id="gender_male">
+                            <input type="radio" autocomplete="off" /> Male
+                        </label>
+                        <label class="btn btn-default" id="gender_female">
+                            <input type="radio" autocomplete="off" /> Female
+                        </label>
+                    </div>
+                    <br />
+                    <br />
+                    Date of birth:
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="dateofbirth">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">Symptoms</div>
-            <div class="panel-body">
-                <div class="container">
-                    <script>
-                        $.getJSON('symptoms.json', (data, err) => {
-                            console.log(err);
-                            for (let i = 0; i < data.length; i++) {
-                                const mainDiv = document.createElement('div');
-                                mainDiv.class = 'checkbox';
-                                const checkbox = document.createElement('input');
-                                checkbox.type = "checkbox";
-                                const label = document.createElement('label');
-                                label.textContent = data[i].Name;
-                                mainDiv.appendChild(label);
-                                document.querySelector('body').appendChild(mainDiv);
-                            }
-                        });
-                    </script>
+            <div class="panel panel-default">
+                <div class="panel-heading">Where does it hurt?</div>
+                <div class="panel-body">
+                    <div class="container" id="symptoms-list">
+                        Please wait, loading...
+                    </div>
                 </div>
+            </div>
+
+            <div class="submit">
+                <button class="submit-button" 
+                        id="submit-button" 
+                        style="display: none;" 
+                        onclick="get_diagnosis();"> Submit </button>
+            </div>
+
+            <div id="diagnosis-result">
             </div>
         </div>
     </div>
-</div>
 
-<!-- you need to include the shieldui css and js assets in order for the components to work -->
-<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
-<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+    <!-- you need to include the shieldui css and js assets in order for the components to work -->
+    <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 
-<script type="text/javascript">
-</script>
-
-<style>
-    .slider {
-        width: 100%;
-    }
-</style>
+    <style>
+        .slider {
+            width: 100%;
+        }
+    </style>
 
 </div>
 
