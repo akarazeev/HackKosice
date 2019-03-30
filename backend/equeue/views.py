@@ -43,4 +43,4 @@ class PatientViewSet(viewsets.ModelViewSet):
                           year_of_birth = data['year_of_birth'])
         patient.save()
         return Response({"id" : patient.id, "name" : patient.name, "gender" :
-                         patient.gender, "year_of_birth" : year_of_birth})
+                         patient.gender, "year_of_birth" : patient.year_of_birth})
