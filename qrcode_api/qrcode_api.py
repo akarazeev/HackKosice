@@ -7,7 +7,7 @@ import qrcode
 """
 
 
-def createCode(patient_id, save_path):
+def create_code(patient_id, save_path):
 
     qr = qrcode.QRCode(
         version = 1,
