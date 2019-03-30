@@ -17,8 +17,9 @@ def random_specs(filename="data/specialisations.json"):
 
     num_specs = np.random.randint(1, 7)
     specialisations = np.random.choice(specialisations, num_specs)
-    return specialisations
-
+    ids = [array['ID'] for array in specialisations]
+    ids_string = ' '.join(map(str,ids))
+    return ids_string
 
 def random_name(topnames_filename='data/topnames.txt', topsurnames_filename='data/topsurnames.txt'):
     with open(topnames_filename, 'r') as f:
