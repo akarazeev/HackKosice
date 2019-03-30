@@ -67,16 +67,40 @@ function get_diagnosis() {
 }
 
 function display_diagnosis(data, div_id) {
-    document.getElementById(div_id).innerHTML = "Your diagnosis is: " + data[0].Issue.Name + " with probability " + data[0].Issue.Accuracy + "%.";
-    document.getElementById("symptoms-list").style = "display: none;";
-    submit_button.style = "display: none;";
+    console.log(data);
+
+    document.getElementById("first-page").style = "display: none;";
+    document.getElementById("second-page").style = "";
+
+    var d = "Based on your symptoms, we are " + data[0].Issue.Accuracy + "% sure that you have <strong>" + data[0].Issue.Name + "</strong>. <br> You can schedule an appointment with one of our specialists in this area.";
+    document.getElementById(div_id).innerHTML = d;
+
+
+    var spec_id = data[0].Specialisation[0].ID;
+    console.log(spec_id);
+
+    var doctors = axios.get("https://5d11ebed.ngrok.io/api/doctors/?specialisation=" + spec_id)
+        .then(response => { display_doctors(response.data, "doctors-list") });
+}
+
+function display_doctors(data, div_id) {
+    console.log(data);
+    var doc_div = document.getElementById(div_id);
+    doc_div.innerHTML = "";
+
+    for (let i = 0; i < data.length; ++i) {
+        doc_div.appendChild(make_entry(data[i].name, data[i].id));
+    }
 }
 
 
 function setup() {
     submit_button = document.getElementById("submit-button");
     submit_button.style = "display: none;";
-    symptom_api = new SymptomAPI();
+    //symptom_api = new SymptomAPI();
 
-    symptom_api.show_body_locations("symptoms-list");
+    //symptom_api.show_body_locations("symptoms-list");
+
+    var t = '[{"Issue":{"ID":80,"Name":"Cold","Accuracy":90,"Icd":"J00","IcdName":"Acute nasopharyngitis [common cold]","ProfName":"Common cold","Ranking":1},"Specialisation":[{"ID":1055,"Name":"General practice","SpecialistID":3}]},{"Issue":{"ID":11,"Name":"Flu","Accuracy":56.953125,"Icd":"J10;J11","IcdName":"Influenza due to other identified influenza virus;Influenza, virus not identified","ProfName":"Influenza","Ranking":2},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":19,"Name":"Internal medicine","SpecialistID":4}]},{"Issue":{"ID":368,"Name":"Flu-related rhinitis","Accuracy":42.1875,"Icd":"J00","IcdName":"Acute nasopharyngitis [common cold]","ProfName":"Infectious rhinitis","Ranking":3},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":32,"Name":"Otolaryngology","SpecialistID":49}]},{"Issue":{"ID":153,"Name":"Inflammation of the bronchi","Accuracy":11.71875,"Icd":"J20;J21","IcdName":"Acute bronchitis;Acute bronchiolitis with bronchospasm ","ProfName":"Acute bronchitis","Ranking":4},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":19,"Name":"Internal medicine","SpecialistID":4},{"ID":35,"Name":"Pulmonology","SpecialistID":6}]},{"Issue":{"ID":44,"Name":"Inflammation of the nose and throat","Accuracy":9.375,"Icd":"J02;J31.2","IcdName":"Acute pharyngitis;Chronic pharyngitis","ProfName":"Nasopharyngitis","Ranking":5},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":32,"Name":"Otolaryngology","SpecialistID":49}]}]';
+    display_diagnosis(JSON.parse(t), "diagnosis-result");
 }
