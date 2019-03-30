@@ -1,7 +1,5 @@
 class SymptomAPI {
     constructor() {
-        this.api_key = '09806a7f45msh0684f4e2c232e7fp10b513jsn574732c58034';
-
         this.key = "09806a7f45msh0684f4e2c232e7fp10b513jsn574732c58034";
         this.url = "https://priaid-symptom-checker-v1.p.rapidapi.com/";
         this.lang = "en-gb";

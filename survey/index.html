@@ -24,7 +24,35 @@
     </div>
 
 
-    <div class="container">
+    <div class="container" id="zero-page">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="container">
+                        <div style="text-align: center; font-size: 18pt;"> Were you here before?</div>
+                        </br>
+                        <div style="font-size: 14pt;"> If so, please scan your QR code.</div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="person_id" autofocus>
+                        </div>
+                        <br>
+                        <br>
+
+                        <button class="submit-button" 
+                                id="init-button"
+                                style = "margin-bottom: 20px; "
+                                onclick="get_diagnosis();"> If not, click this button </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container" id="first-page" style="display: none;">
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
@@ -51,9 +79,9 @@
                     </div>
                     <br />
                     <br />
-                    Date of birth:
+                    Year of birth:
                     <div class="form-group">
-                        <input type="date" class="form-control" id="dateofbirth">
+                        <input type="text" class="form-control" id="dateofbirth">
                     </div>
                 </div>
             </div>
@@ -73,8 +101,27 @@
                         style="display: none;" 
                         onclick="get_diagnosis();"> Submit </button>
             </div>
+        </div>
+    </div>
 
-            <div id="diagnosis-result">
+    <div class="container" id="second-page" style="display: none;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Possible diagnosis</div>
+                <div class="panel-body">
+                    <div id="diagnosis-result" class="diagnosis"></div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Available doctors</div>
+                <div class="panel-body">
+                    <div class="container" id="doctors-list">
+                        Please wait, loading...
+                    </div>
+                </div>
             </div>
         </div>
     </div>
