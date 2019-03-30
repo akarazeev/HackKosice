@@ -1,27 +1,48 @@
 selected_entries = [];
 
 symptoms = [123];
-diagnosis = [456];
+diagnosis = "";
 
 currently_selecting = "body_locations";
 
-name = "This name";
-surname = "shouldn't be here";
+name = "This_name";
+surname = "shouldnt_be_here";
+phone = "";
 year_of_birth = "0000";
 gender = "male";
 patient_id = "";
+doctor_name = "";
 
 
 function finish(queue_num) {
-    console.log(queue_num)
+    document.getElementById("second-page").style = "display: none;";
+    document.getElementById("third-page").style = "";
+
+    var d = document.getElementById("final-message");
+
+    var text = "Thank you for using our services! <strong>" + doctor_name + "</strong> will be notified about your appointment. <br> Currently there are <strong>" + (queue_num-1) + "</strong> people registered before you. You will receive an SMS notification once the doctor is free.<br><br>";
+    text += "Please, remember your personal identification number: <strong>" + patient_id + "</strong>. You can use it to make your registration for the next appointment easier.<br>";
+    text += "A bracelet with the QR code with your ID will now be printed. Please, show it to your doctor once you see him.";
+
+    d.innerHTML = text;
+
 }
 
 function add_to_queue(patient_id, doctor_id) {
     console.log("Adding " + patient_id + " to " + doctor_id);
+
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: patient_id.toString(),
+        width: 200,
+        height: 200,
+        colorDark : "#000000",
+        colorLight : "#ffffff"
+    });
+
     axios.post("https://5d11ebed.ngrok.io/api/applies", 
         params={"patient_id": patient_id, "doctor_id": doctor_id, 
                 "symptoms" : symptoms.join(" "), 
-                "diagnosis": diagnosis.join(" ")}).then(r => { 
+                "diagnosis": diagnosis}).then(r => { 
                     axios.get("https://5d11ebed.ngrok.io/api/applies?patient_id=" + patient_id)
                         .then(r => {finish(r.data.queue)}) 
                 });
@@ -34,38 +55,38 @@ function select_entry(id) {
         currently_selecting = "body_sublocations";
         selected_entries = [];
         entry.className = 'entry-selected';
-        symptom_api.show_body_sublocations(id, "symptoms-list");
-        return;
+        symptom_api.show_body_sublocations(id.slice(1, id.length), "symptoms-list");
     } else if (currently_selecting == "body_sublocations") {
         currently_selecting = "symptoms";
         selected_entries = [];
         entry.className = 'entry-selected';
-        symptom_api.show_symptoms_in_sublocation(id, "man", "symptoms-list");
-        return;
+        symptom_api.show_symptoms_in_sublocation(id.slice(1, id.length), "man", "symptoms-list");
     } else if (currently_selecting == "doctors") {
+        doctor_name = entry.innerHTML;
         if (patient_id == "") {
             axios.post("https://5d11ebed.ngrok.io/api/patients/", 
-                params={"name": name + " " + surname, "gender": gender, "year_of_birth": year_of_birth})
+                params={"name": name + " " + surname, "gender": gender, "year_of_birth": year_of_birth, "phone": phone})
                 .then(r => { 
+                    patient_id = r.data.id;
                     add_to_queue(r.data.id, entry.id);
                 });
         } else {
             add_to_queue(patient_id, entry.id);
         }
-        return;
+    } else {
+        if (selected_entries.includes(id)) {
+            entry.className = 'entry';
+            for (let i = 0; i < selected_entries.length; ++i) {
+                if (selected_entries[i] == id) {
+                    selected_entries.splice(i, 1);
+                }
+            }
+        } else {
+            entry.className = 'entry-selected';
+            selected_entries.push(id);
+        }
     }
 
-    if (selected_entries.includes(id)) {
-        entry.className = 'entry';
-        for (let i = 0; i < selected_entries.length; ++i) {
-            if (selected_entries[i] == id) {
-                selected_entries.splice(i, 1);
-            }
-        }
-    } else {
-        entry.className = 'entry-selected';
-        selected_entries.push(id);
-    }
 }
 
 function make_entry(name, id) {
@@ -79,7 +100,15 @@ function make_entry(name, id) {
 }
 
 function display_data(data, div_id) {
-    if (currently_selecting == "symptoms") {
+    var x = "";
+    if (currently_selecting == "body_locations") {
+        x = 'a';
+    } else if (currently_selecting == "body_sublocations") {
+        x = 'b';
+    } else if (currently_selecting == "doctors") {
+        x = 'c';
+    } else if (currently_selecting == "symptoms") {
+        x = 'd';
         submit_button.style = "";
     }
 
@@ -88,18 +117,24 @@ function display_data(data, div_id) {
     list.innerHTML = "";
 
     for (let i = 0; i < data.length; ++i) {
-        list.appendChild(make_entry(data[i].Name, data[i].ID));
+        list.appendChild(make_entry(data[i].Name, x + data[i].ID));
     }
 }
 
 function get_diagnosis() {
     name = document.getElementById("name").value;
     surname = document.getElementById("surname").value;
+    phone = document.getElementById("phone").value;
     year_of_birth = document.getElementById("dateofbirth").value;
     gender = document.getElementById("gender_male").classList.contains("active") ? "male" : "female";
     patient_id = document.getElementById("person_id").value;
 
-    symptom_api.get_diagnosis(selected_entries, gender, year_of_birth, "diagnosis-result");
+    symptoms = [];
+    for (let i = 0; i < selected_entries.length; ++i) {
+        symptoms.push(selected_entries[i].slice(1, selected_entries[i].length));
+    }
+
+    symptom_api.get_diagnosis(symptoms, gender, year_of_birth, "diagnosis-result");
     console.log("Submit");
 }
 
@@ -109,12 +144,12 @@ function display_diagnosis(data, div_id) {
     document.getElementById("first-page").style = "display: none;";
     document.getElementById("second-page").style = "";
 
+    diagnosis = "<strong>" + data[0].Issue.Name + "</strong> <i>(" + data[0].Issue.IcdName + ")</i>";
     var d = "Based on your symptoms, we are " + data[0].Issue.Accuracy + "% sure that you have: <br> <strong>" + data[0].Issue.Name + "</strong> <i>(" + data[0].Issue.IcdName + ")</i>. <br> You can schedule an appointment with one of our specialists in this area.";
     document.getElementById(div_id).innerHTML = d;
 
 
     var spec_id = data[0].Specialisation[0].ID;
-    console.log(spec_id);
 
     var doc_url = "https://5d11ebed.ngrok.io/api/";
     var doctors = axios.get(doc_url + "doctors/?specialisation=" + spec_id)
@@ -149,6 +184,7 @@ function setup() {
                     document.getElementById("name").value = r.data[0].name.split(" ")[0];
                     document.getElementById("surname").value = r.data[0].name.split(" ")[1];
                     document.getElementById("dateofbirth").value = r.data[0].year_of_birth;
+                    document.getElementById("phone").value = r.data[0].phone;
                     if (r.data[0].gender == "male") {
                         document.getElementById("gender_male").classList.add("active");
                     } else {
@@ -156,21 +192,15 @@ function setup() {
                     }
                 });
 
-        }
+        } 
         document.getElementById("zero-page").style = "display: none;";
         document.getElementById("first-page").style = "";
 
         symptom_api = new SymptomAPI();
         symptom_api.show_body_locations("symptoms-list");
-        return;
-
-        var t = '[{"Issue":{"ID":80,"Name":"Cold","Accuracy":90,"Icd":"J00","IcdName":"Acute nasopharyngitis [common cold]","ProfName":"Common cold","Ranking":1},"Specialisation":[{"ID":1055,"Name":"General practice","SpecialistID":3}]},{"Issue":{"ID":11,"Name":"Flu","Accuracy":56.953125,"Icd":"J10;J11","IcdName":"Influenza due to other identified influenza virus;Influenza, virus not identified","ProfName":"Influenza","Ranking":2},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":19,"Name":"Internal medicine","SpecialistID":4}]},{"Issue":{"ID":368,"Name":"Flu-related rhinitis","Accuracy":42.1875,"Icd":"J00","IcdName":"Acute nasopharyngitis [common cold]","ProfName":"Infectious rhinitis","Ranking":3},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":32,"Name":"Otolaryngology","SpecialistID":49}]},{"Issue":{"ID":153,"Name":"Inflammation of the bronchi","Accuracy":11.71875,"Icd":"J20;J21","IcdName":"Acute bronchitis;Acute bronchiolitis with bronchospasm ","ProfName":"Acute bronchitis","Ranking":4},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":19,"Name":"Internal medicine","SpecialistID":4},{"ID":35,"Name":"Pulmonology","SpecialistID":6}]},{"Issue":{"ID":44,"Name":"Inflammation of the nose and throat","Accuracy":9.375,"Icd":"J02;J31.2","IcdName":"Acute pharyngitis;Chronic pharyngitis","ProfName":"Nasopharyngitis","Ranking":5},"Specialisation":[{"ID":15,"Name":"General practice","SpecialistID":3},{"ID":32,"Name":"Otolaryngology","SpecialistID":49}]}]';
-        display_diagnosis(JSON.parse(t), "diagnosis-result");
-
     };
 
     qr_field.oninput = function() {
         init_button.innerHTML = "Proceed to symptoms";
     };
-
 }
