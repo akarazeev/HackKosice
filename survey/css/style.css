@@ -3,6 +3,10 @@ body {
     font-size: 12pt;
 }
 
+h1 {
+    text-align: center;
+}
+
 .submit-button {
     width: 100%;
     padding-top: 10px;
@@ -39,6 +43,10 @@ body {
     text-align: center;
 }
 
+.entry:hover {
+    background-color: #ceffcc;
+}
+
 .entry-selected {
     font-size: 20pt;
     border: 3px solid #1ad110;
@@ -53,3 +61,6 @@ body {
     background-color: #ceffcc;
 }
 
+.diagnosis {
+    font-size: 14pt;
+}
