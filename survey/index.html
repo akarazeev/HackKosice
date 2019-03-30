@@ -14,6 +14,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
     <script type="text/javascript" src="js/symptom_api.js"></script>
 </head>
 <body onload="setup();">
@@ -83,6 +84,10 @@
                     <div class="form-group">
                         <input type="text" class="form-control" id="dateofbirth">
                     </div>
+                    Phone number
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phone">
+                    </div>
                 </div>
             </div>
 
@@ -121,6 +126,24 @@
                     <div class="container" id="doctors-list">
                         Please wait, loading...
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="third-page" style="display: none;">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Success</div>
+                <div class="panel-body">
+                    <div style="font-size: 14pt;" id="final-message"> </div>
+
+                    <div style="width: 100%; display: flex; justify-content: center; margin-top: 50px; margin-bottom: 50px;">
+                        <div id="qrcode" style="align-self: center;"></div>
+                    </div>
+
                 </div>
             </div>
         </div>
