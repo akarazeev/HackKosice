@@ -31,7 +31,7 @@
                 <div class="panel-body">
                     ID:
                     <div class="form-group">
-                        <input type="text" class="form-control" id="id" autofocus="autofocus">
+                        <input type="text" class="form-control" id="patient_id" autofocus="autofocus">
                     </div>
                 </div>
             </div>
@@ -39,10 +39,16 @@
             <button type="button" class="btn btn-success btn-sm btn-block" onclick="get_patient_info();">
                 <span class="fa fa-send"></span>Submit
             </button>
-
-
-            <div id="diagnosis-result">
+            <br>
+            <div class="panel panel-default">
+                <div class="panel-heading">Patient info</div>
+                <div class="panel-body">
+                    <div class="container" id="patient-info">
+                        Scan QR-code and press Submit
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
