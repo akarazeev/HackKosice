@@ -3,6 +3,10 @@ function show_history(data, div_id) {
     list.innerHTML = "";
     list.style = "font-size: 16pt";
 
+    var msg = "Dear " + data.name + ", there is only one patient before you in the queue. Be ready to come to your doctor soon.";
+    axios.patch("https://5d11ebed.ngrok.io/api/applies", 
+        params={"patient_id": data.id, "message": msg}).then(r => {console.log(r); console.log(msg + " SENT!");});
+
     var general = document.createElement('div');
     general.innerHTML = "<strong>" + data.name + "</strong>, " + data.gender + ", " + data.year_of_birth + " year of birth.<br>Phone number: " + data.phone + "<br><br>";
 
@@ -39,6 +43,7 @@ function show_history(data, div_id) {
 
 function get_patient_info(div_id) {
     var patient_id = document.getElementById('patient_id').value;
+
     axios.get("https://5d11ebed.ngrok.io/api/patients_history?id=" + patient_id).then(
         response => {
             show_history(response.data, div_id);
