@@ -4,7 +4,7 @@ symptoms = [123];
 symptoms_str = [];
 diagnosis = "";
 
-currently_selecting = "body_locations";
+currently_selecting = "init";
 
 name = "This_name";
 surname = "shouldnt_be_here";
@@ -178,6 +178,14 @@ function display_doctors(data, div_id) {
 
 
 function setup() {
+    window.onkeydown = function(e) {
+        if (e.key == "Enter" || e.key == "Tab") {
+            if (currently_selecting == "init") {
+                document.getElementById("init-button").click();
+            }
+        }
+    }
+
     submit_button = document.getElementById("submit-button");
     submit_button.style = "display: none;";
 
@@ -206,6 +214,8 @@ function setup() {
 
         symptom_api = new SymptomAPI();
         symptom_api.show_body_locations("symptoms-list");
+
+        currently_selecting = "body_locations";
     };
 
     qr_field.oninput = function() {

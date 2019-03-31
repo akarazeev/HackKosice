@@ -49,3 +49,11 @@ function get_patient_info(div_id) {
             show_history(response.data, div_id);
         });
 }
+
+function setup() {
+    window.onkeydown = function(e) {
+        if (e.key == "Enter" || e.key == "Tab") {
+            document.getElementById("init-button").click();
+        }
+    }
+}
