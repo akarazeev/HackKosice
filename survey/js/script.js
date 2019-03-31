@@ -1,6 +1,7 @@
 selected_entries = [];
 
 symptoms = [123];
+symptoms_str = [];
 diagnosis = "";
 
 currently_selecting = "body_locations";
@@ -42,6 +43,7 @@ function add_to_queue(patient_id, doctor_id) {
     axios.post("https://5d11ebed.ngrok.io/api/applies", 
         params={"patient_id": patient_id, "doctor_id": doctor_id, 
                 "symptoms" : symptoms.join(" "), 
+                "symptoms_str": symptoms_str.join("."),
                 "diagnosis": diagnosis}).then(r => { 
                     axios.get("https://5d11ebed.ngrok.io/api/applies?patient_id=" + patient_id)
                         .then(r => {finish(r.data.queue)}) 
@@ -132,7 +134,9 @@ function get_diagnosis() {
     symptoms = [];
     for (let i = 0; i < selected_entries.length; ++i) {
         symptoms.push(selected_entries[i].slice(1, selected_entries[i].length));
+        symptoms_str.push(document.getElementById(selected_entries[i]).innerHTML);
     }
+    console.log(symptoms_str);
 
     symptom_api.get_diagnosis(symptoms, gender, year_of_birth, "diagnosis-result");
     console.log("Submit");
