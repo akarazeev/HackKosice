@@ -36,9 +36,10 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-success btn-sm btn-block" onclick="get_patient_info('patient-info');">
-                <span class="fa fa-send"></span>Submit
-            </button>
+            <button class="submit-button" 
+                    id="init-button"
+                    style = "margin-bottom: 50px; "
+                    onclick="get_patient_info('patient-info');"> Submit </button>
             <br>
             <div class="panel panel-default">
                 <div class="panel-heading">Patient info</div>
@@ -59,6 +60,26 @@
     <style>
         .slider {
             width: 100%;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-size: 20pt;
+            margin-bottom: 200px;
+            text-align: center;
+
+            background-color: #4CAF50; /* Green */
+            border: none;
+            border-radius: 3px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .submit-button:hover {
+            background-color: #5fdd64;
         }
     </style>
 
