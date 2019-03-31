@@ -124,11 +124,15 @@ function display_data(data, div_id) {
 }
 
 function get_diagnosis() {
-    name = document.getElementById("name").value;
-    surname = document.getElementById("surname").value;
+    name = document.getElementById("name").value.trim();
+    surname = document.getElementById("surname").value.trim();
     phone = document.getElementById("phone").value;
     year_of_birth = document.getElementById("dateofbirth").value;
-    gender = document.getElementById("gender_male").classList.contains("active") ? "male" : "female";
+    if (document.getElementById("gender_male").classList.contains("active")) {
+        gender = "male";
+    } else if (document.getElementById("gender_female").classList.contains("active")) {
+        gender = "female";
+    }
     patient_id = document.getElementById("person_id").value;
 
     symptoms = [];

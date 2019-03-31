@@ -3,7 +3,7 @@ function show_history(data, div_id) {
     list.innerHTML = "";
     list.style = "font-size: 16pt";
 
-    var msg = "Dear patient, there is only one more person before you in the queue. Be ready to come to your doctor soon.";
+    var msg = "Dear patient, there is only one more person before you in the queue. Be ready to come to your doctor soon. Average wait time currently is ~28 minutes.";
     axios.patch("https://5d11ebed.ngrok.io/api/applies", 
         params={"patient_id": data.id, "message": msg}).then(r => {console.log(r); console.log(msg + " SENT!");});
 
