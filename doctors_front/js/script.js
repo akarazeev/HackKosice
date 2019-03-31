@@ -4,7 +4,7 @@ function show_history(data, div_id) {
     list.style = "font-size: 16pt";
 
     var general = document.createElement('div');
-    general.innerHTML = "<strong>" + data.name + "</strong>, " + data.gender + ", " + data.year_of_birth + " year of birth.<br><br>";
+    general.innerHTML = "<strong>" + data.name + "</strong>, " + data.gender + ", " + data.year_of_birth + " year of birth.<br>Phone number: " + data.phone + "<br><br>";
 
     var applied_on = document.createElement('div');
     applied_on.innerHTML = "Patient applied " + data.applies.length + " time" + (data.applies.length == 1 ? "" : "s") + ": ";
