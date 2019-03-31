@@ -6,7 +6,7 @@ import requests
 """
 
 
-def send_sms(number):
+def send_sms(number, text):
 
     auth = (
         'u2c5d19fe387471260edabc98ac4d7d48',
@@ -14,9 +14,9 @@ def send_sms(number):
         )
 
     fields = {
-        'from': 'Healthcare system',
+        'from': 'Healthcare',
         'to': number,
-        'message': 'You are next! Hurry up!'
+        'message': text
         }
 
     response = requests.post(
