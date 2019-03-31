@@ -24,7 +24,7 @@ function show_history(data, div_id) {
         text += "<strong> Symptoms: </strong><br> ";
         text += "<ul>";
         var sympts = data.applies[i].symptoms.split(" ");
-        var symptst = data.applies[i].symptoms_text.split(".");
+        var symptst = data.applies[i].symptoms_str.split(".");
         for (let j = 0; j < sympts.length; ++j) {
             var sid = sympts[j];
             text += "<li>" + symptst[j] + "</li>";
@@ -43,5 +43,4 @@ function get_patient_info(div_id) {
         response => {
             show_history(response.data, div_id);
         });
-    //show_history({"id":1,"name":"Alexander Smirnov","gender":"female","year_of_birth":2000,"applies":[{"date":"2019-03-30","time":"23:59:47.265702","symptoms":"13 15 95","diagnosis":"<strong>Cold</strong> <i>(Acute nasopharyngitis [common cold])</i>"}]}, div_id);
 }
