@@ -15,6 +15,4 @@ class PatientSerializer(serializers.ModelSerializer):
 class ApplySerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientDoctorRelation
-        fields = ('date', 'time', 'symptoms', 'diagnosis')
-
-# class ApplySerializer(serializers.Serializer):
+        fields = ('date', 'time', 'symptoms', 'diagnosis', 'symptoms_str')

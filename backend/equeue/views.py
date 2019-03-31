@@ -5,6 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from .models import Doctor, Patient, PatientDoctorRelation
 from .utils import *
+from .sms_api import *
 import os
 # Create your views here.
 
@@ -80,7 +81,7 @@ class PatientView(APIView):
         # print(applies)
         serializer = ApplySerializer(applies, many = True)
         return Response({"id" : patient.id, "name" : patient.name, "gender" :
-                         patient.gender, "year_of_birth" : patient.year_of_birth,
+                         patient.gender, "year_of_birth" : patient.year_of_birth,"phone":patient.phone,
                          "applies":serializer.data})
 
 class ApplyView(APIView):
@@ -90,11 +91,12 @@ class ApplyView(APIView):
         doctor_id = request.data.get('doctor_id')
         doctor = Doctor.objects.all().get(id = doctor_id)
         symptoms = request.data.get('symptoms')
+        symptoms_str = request.data.get('symptoms_str')
         diagnosis = request.data.get('diagnosis')
         already_in_queue = PatientDoctorRelation.objects.all().filter(patient = patient, finished = False)
         if not already_in_queue:
             apply = PatientDoctorRelation(patient = patient, doctor = doctor, symptoms = symptoms, \
-                                          diagnosis = diagnosis)
+                                          diagnosis = diagnosis, symptoms_str = symptoms_str)
             apply.save()
             return Response({"status":"added"})
         return Response({"status":"already in"})
@@ -115,9 +117,29 @@ class ApplyView(APIView):
 
     def patch(self, request):
         patient_id = request.data.get('patient_id')
+        message = request.data.get('message')
         patient = Patient.objects.all().get(id = patient_id)
-        personal_queue = PatientDoctorRelation.objects.all().filter(patient = patient)
-        for obj in personal_queue:
-            obj.finished = True
-            obj.save()
+        try:
+            personal_queue = PatientDoctorRelation.objects.all().get(patient = patient, finished = False)
+        except:
+            return Response({"status":"deleted"})
+        # doctors_queue = []
+        personal_queue.finished = True
+        personal_queue.save()
+
+        applies = PatientDoctorRelation.objects.all().filter(doctor = personal_queue.doctor, finished = False).order_by('time')
+        found_next = None
+        # print(applies)
+        for app in applies:
+            if app.time > personal_queue.time:
+                found_next = app
+                break
+
+        if found_next is not None:
+            print('Next is' + str(found_next))
+            # print(found_next.patient.phone)
+            if found_next.patient.phone is not None:
+                print(found_next.patient.phone)
+                send_sms(str(found_next.patient.phone), message)
+        # TODO sms
         return Response({"status":"deleted"})
