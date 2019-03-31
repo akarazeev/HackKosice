@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Healthcare system</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript" src="js/script.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Healthcare system  <small>take care of yourself</small></h1>
+    </div>
+
+
+    <div class="container">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Scan patient's QR-code</div>
+                <div class="panel-body">
+                    ID:
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="patient_id" autofocus="autofocus">
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-success btn-sm btn-block" onclick="get_patient_info('patient-info');">
+                <span class="fa fa-send"></span>Submit
+            </button>
+            <br>
+            <div class="panel panel-default">
+                <div class="panel-heading">Patient info</div>
+                <div class="panel-body">
+                    <div class="container" id="patient-info" style="font-size: 16pt;">
+                        Scan QR-code and press Submit
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- you need to include the shieldui css and js assets in order for the components to work -->
+    <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+
+    <style>
+        .slider {
+            width: 100%;
+        }
+    </style>
+
+</div>
+
+</body>
+</html>
