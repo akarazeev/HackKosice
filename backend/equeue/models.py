@@ -22,4 +22,5 @@ class PatientDoctorRelation(models.Model):
     time = models.TimeField(auto_now_add=True)
     finished = models.BooleanField(default=False)
     symptoms = models.CharField(max_length = 255)
+    symptoms_str = models.TextField(null=True)
     diagnosis = models.CharField(max_length = 255)
